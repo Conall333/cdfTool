@@ -28,7 +28,7 @@ def exp(exponent, n, seed):
 
         random = uniformRng(seed + i)
 
-        myList.append((-math.log(1-random) / exponent))
+        myList.append((-math.log(1.00-random) / exponent))
         i += 1
 
     return myList
@@ -57,6 +57,26 @@ def geo(probability, n, seed):
         i += 1
 
     return myList
+
+
+def gumbel(mu,beta, n, seed):
+
+    i = 0
+    myList = []
+
+    while i <= n:
+
+        random = 1 - uniformRng(seed + i)
+
+        value = mu - (beta * math.log(-math.log(random)))
+
+        myList.append(value)
+
+        i += 1
+
+    return myList
+
+
 
 # plots a cdf and saves it as a pdf, also creates a dictionary with the plot ranges and counts for those ranges
 def plotCdf(disType, numSequence):
@@ -103,14 +123,15 @@ def plotCdf(disType, numSequence):
     # get the list of count values from the dictionary
     counts= list(edgesDictionary.values())
 
-
     # plotting
     cdf = np.cumsum(counts)
     plotFigure = plt.figure()
 
+    plotFigure.suptitle(disType + ' cdf plot', fontsize=20)
+    plt.style.use('seaborn')
     plt.plot(edges[1:], cdf / cdf[-1])
-    plt.ylim([0, 1.05])
-    plt.xlim([0, edges[-1]])
+    plt.ylim([0.00, 1.01])
+    plt.xlim([edges[0], edges[-1]])
     plt.show()
 
     fileName = disType +"_plot.pdf"
@@ -175,12 +196,12 @@ def createCdfData(disType, bins_dictionary):
 
 
 
+
+
+geoList = np.random.uniform(0.2,1500)
+
+
 '''
-geoList = np.random.geometric(0.1,1500)
-myList = np.random.uniform(0,1,1500)
-print(geoList)
-
-
 for discrete map values are predefined values
  continuous define bins
 
@@ -191,6 +212,34 @@ for discrete map values are predefined values
 #print (sys.argv)
 
 # gets inputs form the command line, calls the other functions that produce the outputs
+def takeInputs2(n, seed, disType, param1, param2):
+
+
+    if not int(seed) or not float(seed):
+        print("please enter an integer/float for seed")
+
+    else:
+        if not int(n):
+            print("please enter an integer for n")
+
+        else:
+
+
+            if disType =="gum":
+                if float(param1) or int(param1):
+                    param1 = float(param1)
+                    param2 = float(param2)
+                    n = int(n)
+                    seed = float(seed)
+
+                    sequence = gumbel(param1,param2, n, seed)
+                    createNumberSequence(disType, sequence)
+                    cdf_Data = plotCdf(disType, sequence)
+                    createCdfData(disType, cdf_Data)
+
+            else:
+                print("invalid distribution selected try exp, geo or TODO")
+
 def takeInputs(n, seed, disType, param1):
 
     if not int(seed) or not float(seed):
@@ -217,25 +266,30 @@ def takeInputs(n, seed, disType, param1):
 
             elif disType == "geo":
                 if float(param1) or int(param1):
-
                     sequence = geo(param1, n, seed)
                     createNumberSequence(disType, sequence)
                     cdf_Data = plotCdf(disType, sequence)
                     createCdfData(disType, cdf_Data)
 
 
-            elif disType =="memes":
-                print("memes")
 
             else:
                 print("invalid distribution selected try exp, geo or TODO")
 
 
+
+
+
+
+
 args_list = sys.argv
-takeInputs(args_list[1],args_list[2],args_list[3],args_list[4])
 
+if len(args_list) == 5:
+    takeInputs(args_list[1],args_list[2],args_list[3],args_list[4])
 
-
+elif len(args_list) > 5:
+    print(args_list[5])
+    takeInputs2(args_list[1], args_list[2], args_list[3], args_list[4], args_list[5])
 
 
 
