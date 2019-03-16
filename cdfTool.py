@@ -8,7 +8,7 @@ import sys
 
 
 
-# generates a random uniform number form a given seed
+# generates a random uniform number from a given seed
 def uniformRng(seed):
 
     m = 2**32
@@ -47,7 +47,7 @@ def geo(probability, n, seed):
 
        # myList.append ((math.log(1-random)) / (math.log(1-p)))
 
-        if (random < probability):
+        if random < probability:
             value = 0
         else:
             value = math.ceil(math.log(1-random) / math.log(1 - probability))
@@ -58,17 +58,16 @@ def geo(probability, n, seed):
 
     return myList
 
-
-def gumbel(mu,beta, n, seed):
+# creates a sequence of random numbers according to gumbel distribution
+def gumbel(beta,mu, n, seed):
 
     i = 0
     myList = []
 
     while i <= n:
-
         random = 1 - uniformRng(seed + i)
 
-        value = mu - (beta * math.log(-math.log(random)))
+        value = mu - beta * math.log(-math.log(random))
 
         myList.append(value)
 
@@ -190,59 +189,15 @@ def createCdfData(disType, bins_dictionary):
 
 
 
-
-
-
-
-
-
-
-
-geoList = np.random.uniform(0.2,1500)
-
-
-'''
-for discrete map values are predefined values
- continuous define bins
-
-'''
-
-
-
-#print (sys.argv)
-
 # gets inputs form the command line, calls the other functions that produce the outputs
-def takeInputs2(n, seed, disType, param1, param2):
+def takeInputs(n, seed, disType, param1, *optional):
 
+    try:
+        param2 = optional[0]
+    except:
+        param2 = 1
 
-    if not int(seed) or not float(seed):
-        print("please enter an integer/float for seed")
-
-    else:
-        if not int(n):
-            print("please enter an integer for n")
-
-        else:
-
-
-            if disType =="gum":
-                if float(param1) or int(param1):
-                    param1 = float(param1)
-                    param2 = float(param2)
-                    n = int(n)
-                    seed = float(seed)
-
-                    sequence = gumbel(param1,param2, n, seed)
-                    createNumberSequence(disType, sequence)
-                    cdf_Data = plotCdf(disType, sequence)
-                    createCdfData(disType, cdf_Data)
-
-            else:
-                print("invalid distribution selected try exp, geo or TODO")
-
-def takeInputs(n, seed, disType, param1):
-
-    if not int(seed) or not float(seed):
+    if  not float(seed):
         print("please enter an integer/float for seed")
 
     else:
@@ -264,32 +219,53 @@ def takeInputs(n, seed, disType, param1):
                     cdf_Data = plotCdf(disType,sequence)
                     createCdfData(disType, cdf_Data)
 
+                else:
+                    print("invalid parameter type")
+
             elif disType == "geo":
                 if float(param1) or int(param1):
-                    sequence = geo(param1, n, seed)
-                    createNumberSequence(disType, sequence)
-                    cdf_Data = plotCdf(disType, sequence)
-                    createCdfData(disType, cdf_Data)
+                    if param1 <= 0.99 and param1 >= 0.01:
+                        sequence = geo(param1, n, seed)
+                        createNumberSequence(disType, sequence)
+                        cdf_Data = plotCdf(disType, sequence)
+                        createCdfData(disType, cdf_Data)
 
+                    else:
+                        print("parameter should be between 0.01 and 0.99")
+                else:
+                    print("invalid parameter type")
 
+            elif disType == "gum":
+                    if float(param1) or int(param1):
+                        param2 = float(param2)
+                        sequence = gumbel(param1, param2, n, seed)
+                        createNumberSequence(disType, sequence)
+                        cdf_Data = plotCdf(disType, sequence)
+                        createCdfData(disType, cdf_Data)
+
+                    else:
+                        print("invalid parameter type")
 
             else:
-                print("invalid distribution selected try exp, geo or TODO")
+                print("invalid distribution selected try exp, geo or gum")
 
 
 
 
 
-
+# running the program
 
 args_list = sys.argv
 
 if len(args_list) == 5:
     takeInputs(args_list[1],args_list[2],args_list[3],args_list[4])
 
-elif len(args_list) > 5:
-    print(args_list[5])
-    takeInputs2(args_list[1], args_list[2], args_list[3], args_list[4], args_list[5])
+elif len(args_list) == 6:
+    takeInputs(args_list[1], args_list[2], args_list[3], args_list[4], args_list[5])
+else:
+    print("incorrect format, python3 cdfTool 1000 56767 geo 0.3")
+
+
 
 
 
