@@ -264,7 +264,7 @@ if len(args_list) == 5:
 elif len(args_list) == 6:
     takeInputs(args_list[1], args_list[2], args_list[3], args_list[4], args_list[5])
 else:
-    print("incorrect format, python3 cdfTool 1000 56767 geo 0.3")
+    print("incorrect format, try python3 cdfTool.py 1500 56767 geo 0.3")
 
 
 
