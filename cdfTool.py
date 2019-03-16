@@ -59,15 +59,15 @@ def geo(probability, n, seed):
     return myList
 
 # creates a sequence of random numbers according to gumbel distribution
-def gumbel(beta,mu, n, seed):
+def gumbel(mu,beta, n, seed):
 
     i = 0
     myList = []
 
     while i <= n:
-        random = 1 - uniformRng(seed + i)
+        random = uniformRng(seed + i)
 
-        value = mu - beta * math.log(-math.log(random))
+        value = mu - (beta * math.log(-math.log(random)))
 
         myList.append(value)
 
@@ -129,9 +129,10 @@ def plotCdf(disType, numSequence):
     plotFigure.suptitle(disType + ' cdf plot', fontsize=20)
     plt.style.use('seaborn')
     plt.plot(edges[1:], cdf / cdf[-1])
-    plt.ylim([0.00, 1.01])
+    if disType == "geo" or "exp":
+        plt.ylim([0.00, 1.01])
     plt.xlim([edges[0], edges[-1]])
-    plt.show()
+    #plt.show()
 
     fileName = disType +"_plot.pdf"
     plotFigure.savefig(fileName)
