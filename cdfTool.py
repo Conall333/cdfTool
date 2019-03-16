@@ -19,7 +19,7 @@ def uniformRng(seed):
     return seed/m
 
 # creates a sequence of random numbers according to exponential distribution
-def exp(exponent, n, seed):
+def exponential(exponent, n, seed):
 
     i = 0
     myList = []
@@ -36,7 +36,7 @@ def exp(exponent, n, seed):
     """will need to sort decreasing"""
 
 # creates a sequence of random numbers according to geometric distribution
-def geo(probability, n, seed):
+def geometric(probability, n, seed):
 
     i = 0
     myList = []
@@ -141,7 +141,7 @@ def plotCdf(disType, numSequence):
     return edgesDictionary
 
 # creates a file of the number sequence
-def createNumberSequence(disType, sequence):
+def writeNumberSequence(disType, sequence):
 
     fileName = disType + '_rng_sequence.txt'
 
@@ -168,7 +168,7 @@ def createNumberSequence(disType, sequence):
         print("Unable to write file, file not saved")
 
 # creates a file containing the cdf data
-def createCdfData(disType, bins_dictionary):
+def writeCdfData(disType, bins_dictionary):
 
     fileName = disType + '_cdf_data.txt'
 
@@ -215,10 +215,10 @@ def takeInputs(n, seed, disType, param1, *optional):
             if disType == "exp":
                 if float(param1) or int(param1):
 
-                    sequence = exp(param1, n, seed)
-                    createNumberSequence(disType, sequence)
+                    sequence = exponential(param1, n, seed)
+                    writeNumberSequence(disType, sequence)
                     cdf_Data = plotCdf(disType,sequence)
-                    createCdfData(disType, cdf_Data)
+                    writeCdfData(disType, cdf_Data)
 
                 else:
                     print("invalid parameter type")
@@ -226,10 +226,10 @@ def takeInputs(n, seed, disType, param1, *optional):
             elif disType == "geo":
                 if float(param1) or int(param1):
                     if param1 <= 0.99 and param1 >= 0.01:
-                        sequence = geo(param1, n, seed)
-                        createNumberSequence(disType, sequence)
+                        sequence = geometric(param1, n, seed)
+                        writeNumberSequence(disType, sequence)
                         cdf_Data = plotCdf(disType, sequence)
-                        createCdfData(disType, cdf_Data)
+                        writeCdfData(disType, cdf_Data)
 
                     else:
                         print("parameter should be between 0.01 and 0.99")
@@ -240,9 +240,9 @@ def takeInputs(n, seed, disType, param1, *optional):
                     if float(param1) or int(param1):
                         param2 = float(param2)
                         sequence = gumbel(param1, param2, n, seed)
-                        createNumberSequence(disType, sequence)
+                        writeNumberSequence(disType, sequence)
                         cdf_Data = plotCdf(disType, sequence)
-                        createCdfData(disType, cdf_Data)
+                        writeCdfData(disType, cdf_Data)
 
                     else:
                         print("invalid parameter type")
