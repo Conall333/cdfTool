@@ -5,15 +5,21 @@ cdf command line tool
 Coomand line tool that generates a sequence of pusedorandom numbers of a given distribution and plots their CDF(Cumulative distribution function)
 
 Requirements to run:
-you will need to be using linux
-You will need to have python3 installed
-you will need to have mathplotlib 3.03 package installed https://matplotlib.org/
-you will need to have numpy package installed (this should automatically install with mathplotlib)
 
-After unzipping the file, open a terminal and cd into the path where the file is stored, then input the commands in the same format as below
-Example inputs:
+1. you will need to be using linux
+
+2. You will need to have python3 installed
+
+3. you will need to have mathplotlib 3.03 package installed https://matplotlib.org/
+
+4. you will need to have numpy package installed (this should automatically install with mathplotlib)
+
+After unzipping the file, open a terminal and cd into the path where the file is stored, then input the commands in the same format as below, Example inputs:
+
 python3 cdfTool.py 1500 442324 exp 6
+
 python3 cdfTool.py 1750 32 geo 0.2
+
 python3 cdfTool.py 1000 12312324 gum 1.5 3
 
 This will give 3 outputs to present working directory: 
